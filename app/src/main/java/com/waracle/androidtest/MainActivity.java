@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            mListView = (ListView) rootView.findViewById(R.id.list);
+            //Not needed, Fragment reference to Android ListFragment object
+            //mListView = (ListView) rootView.findViewById(R.id.list);
             return rootView;
         }
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Create and set the list adapter.
             mAdapter = new MyAdapter();
-            mListView.setAdapter(mAdapter);
+            //mListView.setAdapter(mAdapter);
 
             // Load data from net.
             try {
