@@ -1,7 +1,9 @@
 package com.waracle.androidtest;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,8 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.waracle.androidtest.adapters.MyAdapter;
+import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
 import com.waracle.androidtest.threadsManagements.JosonLoader;
+import com.waracle.androidtest.threadsManagements.UIHandler;
+import com.waracle.androidtest.utils.StaticTolls;
+
 import org.json.JSONArray;
+
+import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONArray> {
 
@@ -39,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static MyAdapter mAdapter;
 
+    private ImageLoaderHandler mImageLoaderHandler;
+    private UIHandler mUIHandler;
+    private HandlerThread mHtHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +63,46 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          */
         mLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
 
+        //This a Hashmap that I use as easy way of cache for the images download form the web.
+        StaticTolls.simpleCache = new Hashtable<String, Bitmap>();
+
+        /*
+         * From MainActivity, I have implemented the LoaderCallbacks interface with the type of
+         * Joson array. (implements LoaderCallbacks<JSONArray>) The variable callback is passed
+         * to the call to initLoader below. This means that whenever the loaderManager has
+         * something to notify to MainActivity it will do so through this callback.
+         */
         mCallback = (LoaderManager.LoaderCallbacks<JSONArray>) MainActivity.this;
 
         //Instantiate and return a new Loader for the given ID.
         int loaderId = CAKE_LOADER_ID;
         Bundle bundleForLoader = null;
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, mCallback);
+
+        /*
+         * I need a HandlerThead to realize a queue of message of request for each image to retrieve
+         * that run on a separated thread out of the Mainthread
+         */
+        mHtHandler = new HandlerThread("ImageDownloaderThread");
+        mHtHandler.start();
+        mUIHandler = new UIHandler();
+        mUIHandler.initializedUIHandler();
+        //HandlerThead is passed to a handler to manage the message queue
+        mImageLoaderHandler = new ImageLoaderHandler(mHtHandler.getLooper());
+        mImageLoaderHandler.setUIHandler(mUIHandler);
+        /*
+         * UIthread receives result imaged form mImageLoaderHandler to set them on the respective
+         * Imageviews on the Mainthread to update layout
+         */
+        mUIHandler.setImageLoaderHandler(mImageLoaderHandler);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //When the Activity is destroyed it's needed to stop the HandlerThread
+        mHtHandler.quit();
 
     }
 
@@ -76,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            //Here I implement the refreah action
+            invalidateData();
+            getSupportLoaderManager().restartLoader(CAKE_LOADER_ID, null, this);
             return true;
         }
 
@@ -105,7 +154,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     @Override
     public void onLoadFinished(@NonNull Loader<JSONArray> loader, JSONArray jsonArray) {
+        StaticTolls.simpleCache.clear();
         mAdapter.setItems(jsonArray);
+        mAdapter.setUIHandler(mUIHandler);
     }
 
     /**
@@ -169,5 +220,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mRecyclerView.setAdapter(mAdapter);
         }
 
+    }
+
+    private void invalidateData() {
+        StaticTolls.simpleCache.clear();
+        mUIHandler.initializedUIHandler();
+        mAdapter.setItems(null);
     }
 }

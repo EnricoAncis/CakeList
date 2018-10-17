@@ -1,7 +1,9 @@
 package com.waracle.androidtest.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +12,21 @@ import android.widget.TextView;
 
 import com.waracle.androidtest.ImageLoader;
 import com.waracle.androidtest.R;
+import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
+import com.waracle.androidtest.threadsManagements.UIHandler;
+import com.waracle.androidtest.utils.StaticTolls;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolder>  {
+    private static final String TAG = MyAdapter.class.getSimpleName();
 
     JSONArray mCakesData = null;
     ImageLoader mImageLoader;
+    UIHandler mUIHandler;
+    ImageLoaderHandler mImageLoaderHandler;
 
     public MyAdapter() {
         mImageLoader = new ImageLoader();
@@ -61,7 +69,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
                 JSONObject object = (JSONObject) mCakesData.getJSONObject(position);
                 holder.mTitleView.setText(object.getString("title"));
                 holder.mDescView.setText(object.getString("desc"));
-                //mImageLoader.load(object.getString("image"), holder.mImageView);
+                holder.mImageView.setImageBitmap(null);
+                String imageUrl = object.getString("image");
+
+                /**
+                 * This a easy way to have a image cache,
+                 * images not in cache has downloaded and save in ImageLoaderHandler Class
+                 * */
+                if(StaticTolls.simpleCache.containsKey(imageUrl)){
+                    Bitmap imageBitmap = StaticTolls.simpleCache.get(imageUrl);
+                    holder.mImageView.setImageBitmap(imageBitmap);
+                }
+                else{
+                    Log.e(TAG, "--> SET imageView");
+                    mUIHandler.setImageView(holder.mImageView, imageUrl, position);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -106,10 +128,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
      * created one. This is handy when it's gotten new data from the web but doesn't want to create a
      * new MyAdapter to display it.
      *
-     * @param cakeData The new weather data to be displayed.
+     * @param cakeData The new cakes data to be displayed.
      */
     public void setItems(JSONArray cakeData) {
         mCakesData = cakeData;
         notifyDataSetChanged();
+    }
+
+    /**
+     * This method sets the UIHandlet to the MyAdapter to let it to set images in the Imageviews.
+     *
+     * @param uiHandler The UIHandler.
+     */
+    public void setUIHandler(UIHandler uiHandler) {
+        mUIHandler = uiHandler;
     }
 }
