@@ -1,6 +1,9 @@
 package com.waracle.androidtest.utils;
 
 public class Constants {
+    /*
+     * Constant to set Message keys in a single position of the project
+     */
 
     public static final int GOT_IMAGEURL = 0;
     public static final int IMAGE_DOWNLOADED = 1;

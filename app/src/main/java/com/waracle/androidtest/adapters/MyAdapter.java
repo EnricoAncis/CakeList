@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.waracle.androidtest.ImageLoader;
+import com.waracle.androidtest.unused.ImageLoader;
 import com.waracle.androidtest.R;
 import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
 import com.waracle.androidtest.threadsManagements.UIHandler;

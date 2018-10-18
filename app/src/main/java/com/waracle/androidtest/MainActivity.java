@@ -30,11 +30,14 @@ import java.util.Hashtable;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONArray> {
 
     /**
-     * I implement an AsyncTaskLoader to retrieve data from the web with REST request
-     * AsyncTaskLoader permits to download the data ina a separete thread different from the mainthread.
+     * In this test is required to not use thirdpart Libraries, to handle the REST request I would have used
+     * Retrofit (Volley as second choice).
+     * Without libraries I implement an AsyncTaskLoader to retrieve data from the web with REST way.
+     * The  AsyncTaskLoader permits to download the data ina a separete thread different from the mainthread.
      * This is mandatory to not throw a NetworkOnMainThreadException
-     * I choose AsyncTaskLoader instead of a simply Asynctask because the first one is threadsafe in case
-     * of the caller activity is killed by a configuration changes event, for example.
+     * I choose AsyncTaskLoader instead of a simply Asynctask because the first one, with its ID, is threadsafe in case
+     * of the caller activity is killed by a configuration changes event, for example. So when the caller Activity dieds
+     * does not stay appended any AsyncTasks that's looks for their caller.
      * */
 
     private static String JSON_URL = "https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/" +
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          */
         mLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
 
-        //This a Hashmap that I use as easy way of cache for the images download form the web.
+        //This an Hashmap that I use as easy way of cache for the images download form the web.
         StaticTolls.simpleCache = new Hashtable<String, Bitmap>();
 
         /*
@@ -80,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, mCallback);
 
         /*
+         * As said above in this test is required to not use thirdpart Libaries. To handle the web download
+         * of images I would have use Picasso.
+         * To do this work without libraries I've impementd a HandlerThead and two handler to support it.
+         * One of these Handler runs on the Mainthread to let to update UI layout
          * I need a HandlerThead to realize a queue of message of request for each image to retrieve
          * that run on a separated thread out of the Mainthread
          */
@@ -91,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mImageLoaderHandler = new ImageLoaderHandler(mHtHandler.getLooper());
         mImageLoaderHandler.setUIHandler(mUIHandler);
         /*
-         * UIthread receives result imaged form mImageLoaderHandler to set them on the respective
+         * UIthread receives the result images from mImageLoaderHandler to set them on the respective
          * Imageviews on the Mainthread to update layout
          */
         mUIHandler.setImageLoaderHandler(mImageLoaderHandler);
@@ -122,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            //Here I implement the refreah action
+            //Here I implement the refresh action
             invalidateData();
             getSupportLoaderManager().restartLoader(CAKE_LOADER_ID, null, this);
             return true;
@@ -174,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          */
     }
 
-
     /**
      * Fragment is responsible for loading in some JSON and
      * then displaying a list of cakes with images.
@@ -187,9 +193,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         private static final String TAG = PlaceholderFragment.class.getSimpleName();
 
         /*
-        * I have replaced Listfragment with a Recyclerview RecyclerView beacuse the lastpone is
-        * flexyble when it's needed to customize the list and it's more powerful for better and smoothef
-        * animations above all in cas eof a lot of items in in the list
+         * I have replaced Listfragment with a RecyclerView beacuse the lastone is more
+         * flexyble when it's needed to customize the list and it's more powerful for better and smoother
+         * animations above all in case of a lot of items in in the list
          * */
         private RecyclerView mRecyclerView;
 
@@ -221,7 +227,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
     }
-
+    /**
+     * This refresh cakes data, the StaticTolls.simpleCache Hashtabel is cleared, mUIHandler reinitialized,
+     * Items data erased in MyAdapter
+     * */
     private void invalidateData() {
         StaticTolls.simpleCache.clear();
         mUIHandler.initializedUIHandler();

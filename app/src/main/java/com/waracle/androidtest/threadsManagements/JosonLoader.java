@@ -24,6 +24,13 @@ public class JosonLoader extends AsyncTaskLoader<JSONArray> {
     JSONArray mCakesData = null;
     String mLsonUrl;
 
+    /**
+     * This is the costructor with the referment to its super creator to which is passed the Context.
+     * Here is inizialied mLsonUrl with the url to download the JsonArray
+     *
+     * @param context Activity contex
+     * @param jsonUrl url form which download the JsonArray
+     * */
     public JosonLoader(@NonNull Context context, String jsonUrl) {
         super(context);
         mLsonUrl = jsonUrl;
@@ -37,14 +44,13 @@ public class JosonLoader extends AsyncTaskLoader<JSONArray> {
         if (mCakesData != null) {
             deliverResult(mCakesData);
         } else {
-            //mLoadingIndicator.setVisibility(View.VISIBLE);
             forceLoad();
         }
     }
 
     /**
      * This is the method of the AsyncTaskLoader that will load and parse the JSON data
-     * from OpenWeatherMap in the background.
+     * from gist.githubusercontent in the background.
      *
      * @return Cakes data from gist.githubusercontent as an json array.
      *         null if an error occurs
@@ -65,7 +71,19 @@ public class JosonLoader extends AsyncTaskLoader<JSONArray> {
             // Can you think of a way to improve the performance of loading data
             // using HTTP headers???
 
+            /*
+             * It can be used the ETags from the HTTP headers to check if the image has been updated
+             * or expired.
+             * In case of the update image it can be download, in case of image no update or expired
+             * It can be used the copy of it from the cache
+             *
+             * */
+
             // Also, Do you trust any utils thrown your way????
+
+            /*
+             * A tool to help in this work can be Retrofit and OkHttp
+             * */
 
             byte[] bytes = StreamUtils.readUnknownFully(in);
 

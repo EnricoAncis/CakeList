@@ -14,6 +14,13 @@ public class StreamUtils {
     private static final String TAG = StreamUtils.class.getSimpleName();
 
     // Can you see what's wrong with this???
+
+    /*
+    * I do not see anything wrong in this method except that it is useless and executed in the Mainthread
+    * (in the master version of this test)
+    * It's useless because it retrieves the Byte array to decode the image, but in the ImageLoaderHandler
+    * It can be use directly BitmapFactory.decodeStream to obtain the image bitmap from the inputstream.
+    * */
     public static byte[] readUnknownFully(InputStream stream) throws IOException {
         // Read in stream of bytes
         ArrayList<Byte> data = new ArrayList<>();

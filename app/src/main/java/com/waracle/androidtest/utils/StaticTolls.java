@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import java.util.Map;
 
 public class StaticTolls {
+    /*
+     * Static variables and methos that che be called from anywhere in the project
+     */
 
     public static Map<String, Bitmap> simpleCache;
 

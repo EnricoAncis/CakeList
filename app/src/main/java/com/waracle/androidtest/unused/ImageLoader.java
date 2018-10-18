@@ -1,10 +1,12 @@
-package com.waracle.androidtest;
+package com.waracle.androidtest.unused;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.waracle.androidtest.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
