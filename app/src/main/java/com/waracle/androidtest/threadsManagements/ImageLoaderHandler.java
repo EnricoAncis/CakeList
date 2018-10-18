@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.waracle.androidtest.StreamUtils;
+import com.waracle.androidtest.cacheManagement.ImageCache;
 import com.waracle.androidtest.utils.StaticTolls;
 
 import java.io.IOException;
@@ -120,11 +121,14 @@ public class ImageLoaderHandler extends Handler {
 
                 // Can you think of a way to improve loading of b   itmaps
                 // that have already been loaded previously??
-                /**
-                 * StaticTolls.simpleCache (an Hashtable) is a easy way to have a image cache
-                 * */
+
+                /*
+                 * Now it's used LruCache Android Class to have a real cache for the images
+                 */
                 if( imageBitmap!= null){
-                    StaticTolls.simpleCache.put(imageUrl, imageBitmap);
+                    //StaticTolls.simpleCache.put(imageUrl, imageBitmap);
+                    //if the images is not null it's saved in the cache
+                    ImageCache.getInstance().getLru().put(imageUrl, imageBitmap);
                 }
 
                 //Message preparation

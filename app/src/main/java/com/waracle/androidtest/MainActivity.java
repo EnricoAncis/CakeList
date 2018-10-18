@@ -66,8 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          */
         mLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
 
-        //This an Hashmap that I use as easy way of cache for the images download form the web.
-        StaticTolls.simpleCache = new Hashtable<String, Bitmap>();
+        //StaticTolls.simpleCache = new Hashtable<String, Bitmap>();
 
         /*
          * From MainActivity, I have implemented the LoaderCallbacks interface with the type of
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     @Override
     public void onLoadFinished(@NonNull Loader<JSONArray> loader, JSONArray jsonArray) {
-        StaticTolls.simpleCache.clear();
+        //StaticTolls.simpleCache.clear();
         mAdapter.setItems(jsonArray);
         mAdapter.setUIHandler(mUIHandler);
     }
@@ -228,11 +227,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
     /**
-     * This refresh cakes data, the StaticTolls.simpleCache Hashtabel is cleared, mUIHandler reinitialized,
+     * This refresh cakes data mUIHandler is reinitialized,
      * Items data erased in MyAdapter
      * */
     private void invalidateData() {
-        StaticTolls.simpleCache.clear();
+        //StaticTolls.simpleCache.clear();
         mUIHandler.initializedUIHandler();
         mAdapter.setItems(null);
     }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.waracle.androidtest.cacheManagement.ImageCache;
 import com.waracle.androidtest.unused.ImageLoader;
 import com.waracle.androidtest.R;
 import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
@@ -72,12 +73,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
                 holder.mImageView.setImageBitmap(null);
                 String imageUrl = object.getString("image");
 
-                /**
-                 * This a easy way to have a image cache,
-                 * images not in cache has downloaded and save in ImageLoaderHandler Class
+                /*
+                 * Also now if images not in the cache has to be downloaded and save in
+                 * ImageLoaderHandler , but this time it's used Lru Cache Android Class
                  * */
-                if(StaticTolls.simpleCache.containsKey(imageUrl)){
-                    Bitmap imageBitmap = StaticTolls.simpleCache.get(imageUrl);
+                Bitmap imageBitmap = (Bitmap)ImageCache.getInstance().getLru().get(imageUrl);
+                if(imageBitmap != null){
+                    //Bitmap imageBitmap = StaticTolls.simpleCache.get(imageUrl);
                     holder.mImageView.setImageBitmap(imageBitmap);
                 }
                 else{
@@ -85,7 +87,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
                     mUIHandler.setImageView(holder.mImageView, imageUrl, position);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getStackTrace().toString());
             }
 
 
