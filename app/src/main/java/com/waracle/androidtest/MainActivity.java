@@ -1,7 +1,6 @@
 package com.waracle.androidtest;
 
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -23,11 +22,11 @@ import com.waracle.androidtest.adapters.MyAdapter;
 import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
 import com.waracle.androidtest.threadsManagements.JosonLoader;
 import com.waracle.androidtest.threadsManagements.UIHandler;
-import com.waracle.androidtest.utils.StaticTolls;
 
 import org.json.JSONArray;
 
-import java.util.Hashtable;
+import static com.waracle.androidtest.utils.Constants.CURRENTE_JSON_KEY;
+import static com.waracle.androidtest.utils.Constants.JSON_URL;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONArray> {
 
@@ -41,9 +40,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * of the caller activity is killed by a configuration changes event, for example. So when the caller Activity dieds
      * does not stay appended any AsyncTasks that's looks for their caller.
      * */
-
-    private static String JSON_URL = "https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/" +
-            "raw/8dd19a88f9b8d24c23d9960f3300d0c917a4f07c/cake.json";
 
     private static final int CAKE_LOADER_ID = 0;
 
@@ -70,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          */
         mLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
 
-        //StaticTolls.simpleCache = new Hashtable<String, Bitmap>();
+        //StaticTools.simpleCache = new Hashtable<String, Bitmap>();
 
         /*
          * From MainActivity, I have implemented the LoaderCallbacks interface with the type of
@@ -172,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     @Override
     public void onLoadFinished(@NonNull Loader<JSONArray> loader, JSONArray jsonArray) {
-        //StaticTolls.simpleCache.clear();
+        //StaticTools.simpleCache.clear();
         mAdapter.setItems(jsonArray);
         mAdapter.setUIHandler(mUIHandler);
         //Downloaded the cakes data it's called the method to set the mCoverImage
@@ -245,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * Items data erased in MyAdapter
      * */
     private void invalidateData() {
-        //StaticTolls.simpleCache.clear();
+        //StaticTools.simpleCache.clear();
         mUIHandler.initializedUIHandler();
         mAdapter.setItems(null);
     }

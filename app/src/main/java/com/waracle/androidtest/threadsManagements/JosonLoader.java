@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.waracle.androidtest.StreamUtils;
+import com.waracle.androidtest.utils.StreamUtils;
 
 import org.json.JSONArray;
 

@@ -8,7 +8,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.waracle.androidtest.cacheManagement.ImageCache;
-import com.waracle.androidtest.utils.StaticTolls;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -92,14 +91,14 @@ public class UIHandler extends Handler {
                 String imageUrl = imageBundle.getString(IMAGE_URL_KEY);
 
                 //here the image downloaded is retrieved from the cache, instead of the old Hastable
-                //StaticTolls.simpleCache, and settes in the imageview
+                //StaticTools.simpleCache, and settes in the imageview
                 Bitmap imageBitmap = (Bitmap)ImageCache.getInstance().getLru().get(imageUrl);
                 if(mImageViewMap.containsKey(imagePos) &&
-                        //StaticTolls.simpleCache.containsKey(imageUrl)){
+                        //StaticTools.simpleCache.containsKey(imageUrl)){
                         imageBitmap != null){
 
-                    //Image url to retrieves the image Bitmap from the Hashmap StaticTolls.simpleCache
-                    //Bitmap imageBitmap =  StaticTolls.simpleCache.get(imageUrl);
+                    //Image url to retrieves the image Bitmap from the Hashmap StaticTools.simpleCache
+                    //Bitmap imageBitmap =  StaticTools.simpleCache.get(imageUrl);
                     //Item position to retrieve the right item ImageView to set right image
                     ImageView imgView = mImageViewMap.get(imagePos);
                     imgView.setImageBitmap(imageBitmap);

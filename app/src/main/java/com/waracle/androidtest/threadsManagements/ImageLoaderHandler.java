@@ -8,9 +8,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import com.waracle.androidtest.StreamUtils;
+import com.waracle.androidtest.utils.StaticTools;
+import com.waracle.androidtest.utils.StreamUtils;
 import com.waracle.androidtest.cacheManagement.ImageCache;
-import com.waracle.androidtest.utils.StaticTolls;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,7 +77,7 @@ public class ImageLoaderHandler extends Handler {
     }
 
     /**
-     * This method does the http request for the images, it saves them in StaticTolls.simpleCache and
+     * This method does the http request for the images, it saves them in StaticTools.simpleCache and
      * send back the Message to the UIHandler
      *
      * @param imageUrl image url to download
@@ -113,10 +113,10 @@ public class ImageLoaderHandler extends Handler {
                 /*
                  * StreamUtils.readUnknownFully is useless because it retrieves the Byte array to decode
                  * the image, but in the ImageLoaderHandler
-                 * It can be use directly BitmapFactory.decodeStream to obtain the image bitmap from the inputstream.
+                 * It can be use directly BitmapFactory.decodeStream to obtain the image bitmap from the inputStream.
                 */
-                /*byte[] imageBytes = StreamUtils.readUnknownFully(inputStream);
-                Bitmap imageBitmap = StaticTolls.convertToBitmap(imageBytes);*/
+               /* byte[] imageBytes = StreamUtils.readUnknownFully(inputStream);
+                Bitmap imageBitmap = StaticTools.convertToBitmap(imageBytes);*/
                 Bitmap imageBitmap = BitmapFactory.decodeStream(inputStream);
 
                 // Can you think of a way to improve loading of b   itmaps
@@ -126,7 +126,7 @@ public class ImageLoaderHandler extends Handler {
                  * Now it's used LruCache Android Class to have a real cache for the images
                  */
                 if( imageBitmap!= null){
-                    //StaticTolls.simpleCache.put(imageUrl, imageBitmap);
+                    //StaticTools.simpleCache.put(imageUrl, imageBitmap);
                     //if the images is not null it's saved in the cache
                     ImageCache.getInstance().getLru().put(imageUrl, imageBitmap);
                 }

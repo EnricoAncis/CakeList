@@ -1,7 +1,9 @@
-package com.waracle.androidtest;
+package com.waracle.androidtest.utils;
 
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,30 +18,42 @@ public class StreamUtils {
     // Can you see what's wrong with this???
 
     /*
-    * I do not see anything wrong in this method except that it is useless and executed in the Mainthread
-    * (in the master version of this test)
-    * It's useless because it retrieves the Byte array to decode the image, but in the ImageLoaderHandler
-    * It can be use directly BitmapFactory.decodeStream to obtain the image bitmap from the inputstream.
+     * I see that it does not used any Stream buffer to read the inputStream,
+     * something like what it's wrote now below.
+     * readUnknownFully method is in anycase useless because it retrieves the Byte array to decode
+     * the image, but in the ImageLoaderHandler it can be use directly BitmapFactory.decodeStream
+     * to obtain the image bitmap from the inputStream.
     * */
     public static byte[] readUnknownFully(InputStream stream) throws IOException {
+
+        BufferedInputStream buffStream = new BufferedInputStream(stream);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int current = 0;
+        while ((current = buffStream.read()) != -1) {
+            buffer.write((byte) current);
+        }
+        return buffer.toByteArray();
+
+
+
         // Read in stream of bytes
-        ArrayList<Byte> data = new ArrayList<>();
+        /*ArrayList<Byte> data = new ArrayList<>();
         while (true) {
             int result = stream.read();
             if (result == -1) {
                 break;
             }
             data.add((byte) result);
-        }
+        }*/
 
         // Convert ArrayList<Byte> to byte[]
-        byte[] bytes = new byte[data.size()];
+        /*byte[] bytes = new byte[data.size()];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = data.get(i);
         }
 
         // Return the raw byte array.
-        return bytes;
+        return bytes;*/
     }
 
     public static void close(Closeable closeable) {

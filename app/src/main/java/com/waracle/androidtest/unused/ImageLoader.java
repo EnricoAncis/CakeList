@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.waracle.androidtest.StreamUtils;
+import com.waracle.androidtest.utils.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

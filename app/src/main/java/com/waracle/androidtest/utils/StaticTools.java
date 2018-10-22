@@ -10,10 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-
-public class StaticTolls {
-    private static final String TAG = StaticTolls.class.getSimpleName();
+public class StaticTools {
+    private static final String TAG = StaticTools.class.getSimpleName();
 
     /*
      * Static variables and methos that che be called from anywhere in the project

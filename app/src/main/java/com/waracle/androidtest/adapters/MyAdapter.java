@@ -13,9 +13,8 @@ import android.widget.TextView;
 import com.waracle.androidtest.cacheManagement.ImageCache;
 import com.waracle.androidtest.unused.ImageLoader;
 import com.waracle.androidtest.R;
-import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
 import com.waracle.androidtest.threadsManagements.UIHandler;
-import com.waracle.androidtest.utils.StaticTolls;
+import com.waracle.androidtest.utils.StaticTools;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,7 +77,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
                  * */
                 Bitmap imageBitmap = (Bitmap)ImageCache.getInstance().getLru().get(imageUrl);
                 if(imageBitmap != null){
-                    //Bitmap imageBitmap = StaticTolls.simpleCache.get(imageUrl);
+                    //Bitmap imageBitmap = StaticTools.simpleCache.get(imageUrl);
                     holder.mImageView.setImageBitmap(imageBitmap);
                 }
                 else{
@@ -153,7 +152,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
     public void setCoverImage(ImageView coverImageView){
 
         //Here it's seted the cakes data in a static variable to the static method in easy way
-        StaticTolls.setCakesData(mCakesData);
+        StaticTools.setCakesData(mCakesData);
         coverImageView.setImageBitmap(null);
 
         if(mCakesData != null){
@@ -161,13 +160,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
             //If the cache is populated the random cake image is get from it
             if(ImageCache.getInstance().getLru().size() > 0){
                 //Here it's obtained a random image key
-                String randomKey = StaticTolls.getRandomCacheKey();
+                String randomKey = StaticTools.getRandomCacheKey();
                 Bitmap imageBitmap = (Bitmap) ImageCache.getInstance().getLru().snapshot().get(randomKey);
                 coverImageView.setImageBitmap(imageBitmap);
             }
             else{
                 //Here it's obtained a random image url to download it from the web
-                String imageUrl = StaticTolls.getRandomImageUrl();
+                String imageUrl = StaticTools.getRandomImageUrl();
                 mUIHandler.setImageView(coverImageView, imageUrl, -1); //Now It's not neede the
                 //position because setImageView
                 //is not workinking for the
