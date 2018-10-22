@@ -27,7 +27,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
     JSONArray mCakesData = null;
     ImageLoader mImageLoader;
     UIHandler mUIHandler;
-    ImageLoaderHandler mImageLoaderHandler;
 
     public MyAdapter() {
         mImageLoader = new ImageLoader();
@@ -144,5 +143,37 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyAdapterViewHolde
      */
     public void setUIHandler(UIHandler uiHandler) {
         mUIHandler = uiHandler;
+    }
+
+    /**
+     * This is the method to set the random image in the mCoverImage
+     *
+     * @param coverImageView Imageview of the landscape mode
+     * */
+    public void setCoverImage(ImageView coverImageView){
+
+        //Here it's seted the cakes data in a static variable to the static method in easy way
+        StaticTolls.setCakesData(mCakesData);
+        coverImageView.setImageBitmap(null);
+
+        if(mCakesData != null){
+            //setRandomImage(coverImageView);
+            //If the cache is populated the random cake image is get from it
+            if(ImageCache.getInstance().getLru().size() > 0){
+                //Here it's obtained a random image key
+                String randomKey = StaticTolls.getRandomCacheKey();
+                Bitmap imageBitmap = (Bitmap) ImageCache.getInstance().getLru().snapshot().get(randomKey);
+                coverImageView.setImageBitmap(imageBitmap);
+            }
+            else{
+                //Here it's obtained a random image url to download it from the web
+                String imageUrl = StaticTolls.getRandomImageUrl();
+                mUIHandler.setImageView(coverImageView, imageUrl, -1); //Now It's not neede the
+                //position because setImageView
+                //is not workinking for the
+                //Rectclerview
+            }
+
+        }
     }
 }

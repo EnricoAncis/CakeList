@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="vertival_padding">8dp</dimen>
+    <dimen name="cover_vertical_margin">32dp</dimen>
+    <dimen name="image_cover_dim">124dp</dimen>
 </resources>

@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import com.waracle.androidtest.adapters.MyAdapter;
 import com.waracle.androidtest.threadsManagements.ImageLoaderHandler;
 import com.waracle.androidtest.threadsManagements.JosonLoader;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ImageLoaderHandler mImageLoaderHandler;
     private UIHandler mUIHandler;
     private HandlerThread mHtHandler;
+
+    private ImageView mCoverImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
          * Imageviews on the Mainthread to update layout
          */
         mUIHandler.setImageLoaderHandler(mImageLoaderHandler);
+
+        /*
+         * Supporting the ratation, it has been diversify the layout for the landascape mode, in this case
+         * it's present an ImaheView that shows a random image from cakes that have one and getting it
+         * from the cache, if cache is not empty.
+         * mCoverImage is this ImagegeView
+         * */
+        mCoverImage = (ImageView) findViewById(R.id.cover_image);
 
     }
 
@@ -163,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //StaticTolls.simpleCache.clear();
         mAdapter.setItems(jsonArray);
         mAdapter.setUIHandler(mUIHandler);
+        //Downloaded the cakes data it's called the method to set the mCoverImage
+        setCoverImage();
     }
 
     /**
@@ -234,5 +248,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //StaticTolls.simpleCache.clear();
         mUIHandler.initializedUIHandler();
         mAdapter.setItems(null);
+    }
+
+    /**
+     * (Portrait mode: mCoverImage is null)
+     * (Landscape mode: mCoverImage is not null)
+     * */
+    public void setCoverImage(){
+        if(mCoverImage != null){
+            //mCoverImage is seted in the MyAdapter tha has all it's needed
+            mAdapter.setCoverImage(mCoverImage);
+        }
     }
 }
